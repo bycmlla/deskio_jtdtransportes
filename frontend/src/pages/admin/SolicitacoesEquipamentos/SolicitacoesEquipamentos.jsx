@@ -13,6 +13,15 @@ const STATUS_SOLICITACAO = [
   "Cancelada",
 ];
 
+function getCodigo(equipamento) {
+  return (
+    equipamento.codigo_identificador ||
+    equipamento.numero_serie ||
+    equipamento.patrimonio ||
+    ""
+  );
+}
+
 export default function SolicitacoesEquipamentos() {
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [equipamentosDisponiveis, setEquipamentosDisponiveis] = useState([]);
@@ -221,11 +230,8 @@ export default function SolicitacoesEquipamentos() {
                               {equipamentosDisponiveis.map((equipamento) => (
                                 <option key={equipamento.id} value={equipamento.id}>
                                   {equipamento.nome}
-                                  {equipamento.numero_serie
-                                    ? ` - ${equipamento.numero_serie}`
-                                    : ""}
-                                  {equipamento.patrimonio
-                                    ? ` - Patr. ${equipamento.patrimonio}`
+                                  {getCodigo(equipamento)
+                                    ? ` - ${getCodigo(equipamento)}`
                                     : ""}
                                 </option>
                               ))}

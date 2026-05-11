@@ -17,6 +17,8 @@ import Setores from './pages/admin/Setores/Setores';
 import EstoqueEquipamentos from './pages/admin/EstoqueEquipamentos/EstoqueEquipamentos';
 import SolicitacoesEquipamentos from './pages/admin/SolicitacoesEquipamentos/SolicitacoesEquipamentos';
 import EquipamentosAlocados from './pages/admin/EquipamentosAlocados/EquipamentosAlocados';
+import Computadores from './pages/admin/Computadores/Computadores';
+import MovimentacoesEquipamentos from './pages/admin/MovimentacoesEquipamentos/MovimentacoesEquipamentos';
 
 function PrivateRoute({ children }) {
   const { usuario } = useAuth();
@@ -48,6 +50,14 @@ export default function App() {
           <Route path="/admin/equipamentos" element={<PrivateRoute><EstoqueEquipamentos /></PrivateRoute>} />
           <Route path="/admin/solicitacoes-equipamentos" element={<PrivateRoute><SolicitacoesEquipamentos /></PrivateRoute>} />
           <Route path="/admin/equipamentos-alocados" element={<PrivateRoute><EquipamentosAlocados /></PrivateRoute>} />
+          <Route path="/admin/computadores" element={<PrivateRoute><Computadores /></PrivateRoute>} />
+          <Route path="/admin/movimentacoes-equipamentos" element={<PrivateRoute><MovimentacoesEquipamentos /></PrivateRoute>} />
+          <Route path="/admin/almoxarifado" element={<Navigate to="/admin/almoxarifado/estoque" replace />} />
+          <Route path="/admin/almoxarifado/estoque" element={<PrivateRoute><EstoqueEquipamentos /></PrivateRoute>} />
+          <Route path="/admin/almoxarifado/solicitacoes" element={<PrivateRoute><SolicitacoesEquipamentos /></PrivateRoute>} />
+          <Route path="/admin/almoxarifado/alocados" element={<PrivateRoute><EquipamentosAlocados /></PrivateRoute>} />
+          <Route path="/admin/almoxarifado/computadores" element={<PrivateRoute><Computadores /></PrivateRoute>} />
+          <Route path="/admin/almoxarifado/movimentacoes" element={<PrivateRoute><MovimentacoesEquipamentos /></PrivateRoute>} />
           <Route path="/admin/setores" element={<PrivateRoute><Setores /></PrivateRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />

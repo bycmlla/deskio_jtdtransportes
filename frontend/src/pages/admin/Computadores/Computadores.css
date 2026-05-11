@@ -1,0 +1,33 @@
+.computadores-filtros-card {
+  margin-bottom: 20px;
+  padding: 16px;
+}
+
+.computadores-filtros-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 220px auto;
+  gap: 12px;
+}
+
+.computadores-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.computadores-primary {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.computadores-code {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .computadores-filtros-grid {
+    grid-template-columns: 1fr;
+  }
+}

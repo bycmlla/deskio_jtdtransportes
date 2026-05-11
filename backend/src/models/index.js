@@ -144,10 +144,23 @@ export const Equipamento = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     nome: { type: DataTypes.STRING(150), allowNull: false },
     categoria: { type: DataTypes.STRING(100), allowNull: false },
-    numero_serie: { type: DataTypes.STRING(100), allowNull: true, unique: true },
+    codigo_identificador: {
+      type: DataTypes.STRING(120),
+      allowNull: true,
+      unique: true,
+    },
+    numero_serie: { type: DataTypes.STRING(100), allowNull: true },
     patrimonio: { type: DataTypes.STRING(100), allowNull: true },
     data_compra: { type: DataTypes.DATEONLY, allowNull: true },
     quantidade: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+    setor_id: { type: DataTypes.INTEGER, allowNull: true },
+    usuario: { type: DataTypes.STRING(120), allowNull: true },
+    ip: { type: DataTypes.STRING(45), allowNull: true },
+    estacao: { type: DataTypes.STRING(120), allowNull: true },
+    processador: { type: DataTypes.STRING(150), allowNull: true },
+    geracao: { type: DataTypes.STRING(80), allowNull: true },
+    ssd: { type: DataTypes.STRING(80), allowNull: true },
+    ram: { type: DataTypes.STRING(80), allowNull: true },
     status: {
       type: DataTypes.ENUM(
         "Disponível",
@@ -164,6 +177,18 @@ export const Equipamento = sequelize.define(
     data_atualizacao: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   { timestamps: false, tableName: "equipamentos" },
+);
+
+export const CategoriaEquipamento = sequelize.define(
+  "CategoriaEquipamento",
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    nome: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    ativo: { type: DataTypes.BOOLEAN, defaultValue: true },
+    data_criacao: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    data_atualizacao: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  },
+  { timestamps: false, tableName: "categorias_equipamentos" },
 );
 
 export const SolicitacaoEquipamento = sequelize.define(
@@ -246,6 +271,7 @@ ObservacaoInterna.belongsTo(UsuarioAdmin, {
   as: "usuario",
 });
 SolicitacaoEquipamento.belongsTo(Setor, { foreignKey: "setor_id", as: "setor" });
+Equipamento.belongsTo(Setor, { foreignKey: "setor_id", as: "setor" });
 SolicitacaoEquipamento.belongsTo(Equipamento, {
   foreignKey: "equipamento_id",
   as: "equipamento",
@@ -283,6 +309,7 @@ export default {
   HistoricoChamado,
   ObservacaoInterna,
   Equipamento,
+  CategoriaEquipamento,
   SolicitacaoEquipamento,
   EquipamentoAlocado,
   HistoricoEquipamento,

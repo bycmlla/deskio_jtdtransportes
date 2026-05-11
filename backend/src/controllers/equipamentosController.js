@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import sequelize from "../database.js";
 import {
+  CategoriaEquipamento,
   Equipamento,
   EquipamentoAlocado,
   HistoricoEquipamento,
@@ -27,6 +28,19 @@ const STATUS_SOLICITACAO = [
 
 const STATUS_DEVOLUCAO = ["Disponível", "Em manutenção", "Danificado"];
 
+const CATEGORIAS_PADRAO = [
+  "Mouse",
+  "Teclado",
+  "Monitor",
+  "Notebook",
+  "Desktop",
+  "Headset",
+  "Carregador",
+  "Cabos",
+];
+
+const CATEGORIAS_COMPUTADOR = ["Notebook", "Desktop"];
+
 function limparCPF(cpf) {
   return String(cpf || "").replace(/\D/g, "");
 }
@@ -34,6 +48,57 @@ function limparCPF(cpf) {
 function normalizarVazio(valor) {
   const texto = String(valor || "").trim();
   return texto || null;
+}
+
+function normalizarDataCompra(valor) {
+  const data = normalizarVazio(valor);
+  if (!data) return null;
+
+  const match = data.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    const erro = new Error("Data de compra inválida. Use o formato YYYY-MM-DD.");
+    erro.statusCode = 400;
+    throw erro;
+  }
+
+  const [, ano, mes, dia] = match;
+  const anoNumero = Number(ano);
+  const mesNumero = Number(mes);
+  const diaNumero = Number(dia);
+  const dataUtc = new Date(Date.UTC(anoNumero, mesNumero - 1, diaNumero));
+
+  const dataValida =
+    dataUtc.getUTCFullYear() === anoNumero &&
+    dataUtc.getUTCMonth() === mesNumero - 1 &&
+    dataUtc.getUTCDate() === diaNumero;
+
+  if (!dataValida) {
+    const erro = new Error("Data de compra inválida. Use o formato YYYY-MM-DD.");
+    erro.statusCode = 400;
+    throw erro;
+  }
+
+  return `${ano}-${mes}-${dia}`;
+}
+
+function ehCategoriaComputador(categoria) {
+  return CATEGORIAS_COMPUTADOR.includes(String(categoria || "").trim());
+}
+
+async function garantirCategoriasPadrao() {
+  await Promise.all(
+    CATEGORIAS_PADRAO.map((nome) =>
+      CategoriaEquipamento.findOrCreate({
+        where: { nome },
+        defaults: {
+          nome,
+          ativo: true,
+          data_criacao: new Date(),
+          data_atualizacao: new Date(),
+        },
+      }),
+    ),
+  );
 }
 
 function validarCPF(cpf) {
@@ -119,17 +184,30 @@ async function registrarHistorico({
 }
 
 function montarPayloadEquipamento(body) {
-  const numeroSerie = normalizarVazio(body.numero_serie);
-  const quantidade = numeroSerie ? 1 : Number(body.quantidade || 1);
+  const codigoIdentificador = normalizarVazio(
+    body.codigo_identificador || body.numero_serie || body.patrimonio,
+  );
+  const quantidade = codigoIdentificador ? 1 : Number(body.quantidade || 1);
+  const categoria = String(body.categoria || "").trim();
+  const computador = ehCategoriaComputador(categoria);
 
   return {
     nome: String(body.nome || "").trim(),
-    categoria: String(body.categoria || "").trim(),
-    numero_serie: numeroSerie,
-    patrimonio: normalizarVazio(body.patrimonio),
-    data_compra: normalizarVazio(body.data_compra),
+    categoria,
+    codigo_identificador: codigoIdentificador,
+    numero_serie: null,
+    patrimonio: null,
+    data_compra: normalizarDataCompra(body.data_compra),
     quantidade: Number.isFinite(quantidade) && quantidade > 0 ? quantidade : 1,
     status: body.status || "Disponível",
+    setor_id: computador ? normalizarVazio(body.setor_id) : null,
+    usuario: computador ? normalizarVazio(body.usuario) : null,
+    ip: computador ? normalizarVazio(body.ip) : null,
+    estacao: computador ? normalizarVazio(body.estacao) : null,
+    processador: computador ? normalizarVazio(body.processador) : null,
+    geracao: computador ? normalizarVazio(body.geracao) : null,
+    ssd: computador ? normalizarVazio(body.ssd) : null,
+    ram: computador ? normalizarVazio(body.ram) : null,
     observacoes: normalizarVazio(body.observacoes),
     data_atualizacao: new Date(),
   };
@@ -209,24 +287,78 @@ export async function criarSolicitacaoEquipamento(req, res) {
   }
 }
 
+export async function listarCategoriasEquipamentos(req, res) {
+  try {
+    await garantirCategoriasPadrao();
+
+    const categorias = await CategoriaEquipamento.findAll({
+      where: { ativo: true },
+      order: [["nome", "ASC"]],
+    });
+
+    return res.json(categorias);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro interno" });
+  }
+}
+
+export async function criarCategoriaEquipamento(req, res) {
+  try {
+    const nome = String(req.body?.nome || "").trim();
+    if (!nome) {
+      return res.status(400).json({ error: "Nome da categoria é obrigatório" });
+    }
+
+    const [categoria, criada] = await CategoriaEquipamento.findOrCreate({
+      where: { nome },
+      defaults: {
+        nome,
+        ativo: true,
+        data_criacao: new Date(),
+        data_atualizacao: new Date(),
+      },
+    });
+
+    if (!criada && !categoria.ativo) {
+      await categoria.update({ ativo: true, data_atualizacao: new Date() });
+    }
+
+    return res.status(criada ? 201 : 200).json(categoria);
+  } catch (err) {
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({ error: "Categoria já cadastrada" });
+    }
+
+    console.error(err);
+    return res.status(500).json({ error: "Erro interno" });
+  }
+}
+
 export async function listarEquipamentos(req, res) {
   try {
-    const { status, categoria, busca } = req.query;
+    const { id, status, categoria, busca } = req.query;
     const where = {};
 
+    if (id) where.id = id;
     if (status) where.status = status;
     if (categoria) where.categoria = categoria;
     if (busca) {
       where[Op.or] = [
         { nome: { [Op.like]: `%${busca}%` } },
         { categoria: { [Op.like]: `%${busca}%` } },
+        { codigo_identificador: { [Op.like]: `%${busca}%` } },
         { numero_serie: { [Op.like]: `%${busca}%` } },
         { patrimonio: { [Op.like]: `%${busca}%` } },
+        { usuario: { [Op.like]: `%${busca}%` } },
+        { ip: { [Op.like]: `%${busca}%` } },
+        { estacao: { [Op.like]: `%${busca}%` } },
       ];
     }
 
     const equipamentos = await Equipamento.findAll({
       where,
+      include: [{ model: Setor, as: "setor", attributes: ["id", "nome"] }],
       order: [
         ["status", "ASC"],
         ["nome", "ASC"],
@@ -234,6 +366,42 @@ export async function listarEquipamentos(req, res) {
     });
 
     return res.json(equipamentos);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro interno" });
+  }
+}
+
+export async function listarComputadores(req, res) {
+  try {
+    const { id, busca, status } = req.query;
+    const where = {
+      categoria: { [Op.in]: CATEGORIAS_COMPUTADOR },
+    };
+
+    if (id) where.id = id;
+    if (status) where.status = status;
+    if (busca) {
+      where[Op.or] = [
+        { nome: { [Op.like]: `%${busca}%` } },
+        { codigo_identificador: { [Op.like]: `%${busca}%` } },
+        { usuario: { [Op.like]: `%${busca}%` } },
+        { ip: { [Op.like]: `%${busca}%` } },
+        { estacao: { [Op.like]: `%${busca}%` } },
+        { processador: { [Op.like]: `%${busca}%` } },
+      ];
+    }
+
+    const computadores = await Equipamento.findAll({
+      where,
+      include: [{ model: Setor, as: "setor", attributes: ["id", "nome"] }],
+      order: [
+        ["categoria", "ASC"],
+        ["nome", "ASC"],
+      ],
+    });
+
+    return res.json(computadores);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Erro interno" });
@@ -255,6 +423,17 @@ export async function criarEquipamento(req, res) {
       await transaction.rollback();
       return res.status(400).json({ error: "Status inválido" });
     }
+
+    await CategoriaEquipamento.findOrCreate({
+      where: { nome: payload.categoria },
+      defaults: {
+        nome: payload.categoria,
+        ativo: true,
+        data_criacao: new Date(),
+        data_atualizacao: new Date(),
+      },
+      transaction,
+    });
 
     const equipamento = await Equipamento.create(
       {
@@ -278,8 +457,12 @@ export async function criarEquipamento(req, res) {
   } catch (err) {
     await transaction.rollback();
 
+    if (err.statusCode) {
+      return res.status(err.statusCode).json({ error: err.message });
+    }
+
     if (err.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({ error: "Número de série já cadastrado" });
+      return res.status(400).json({ error: "Código identificador já cadastrado" });
     }
 
     console.error(err);
@@ -311,6 +494,17 @@ export async function editarEquipamento(req, res) {
       return res.status(400).json({ error: "Status inválido" });
     }
 
+    await CategoriaEquipamento.findOrCreate({
+      where: { nome: payload.categoria },
+      defaults: {
+        nome: payload.categoria,
+        ativo: true,
+        data_criacao: new Date(),
+        data_atualizacao: new Date(),
+      },
+      transaction,
+    });
+
     await equipamento.update(payload, { transaction });
 
     let tipoEvento = "alteracao";
@@ -340,8 +534,12 @@ export async function editarEquipamento(req, res) {
   } catch (err) {
     await transaction.rollback();
 
+    if (err.statusCode) {
+      return res.status(err.statusCode).json({ error: err.message });
+    }
+
     if (err.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({ error: "Número de série já cadastrado" });
+      return res.status(400).json({ error: "Código identificador já cadastrado" });
     }
 
     console.error(err);
@@ -410,6 +608,32 @@ export async function historicoEquipamento(req, res) {
         { model: SolicitacaoEquipamento, as: "solicitacao", attributes: ["protocolo"] },
       ],
       order: [["data_evento", "DESC"]],
+    });
+
+    return res.json(historico);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro interno" });
+  }
+}
+
+export async function listarMovimentacoesEquipamentos(req, res) {
+  try {
+    const { equipamento_id, tipo_evento } = req.query;
+    const where = {};
+
+    if (equipamento_id) where.equipamento_id = equipamento_id;
+    if (tipo_evento) where.tipo_evento = tipo_evento;
+
+    const historico = await HistoricoEquipamento.findAll({
+      where,
+      include: [
+        { model: Equipamento, as: "equipamento" },
+        { model: UsuarioAdmin, as: "usuario", attributes: ["nome"] },
+        { model: SolicitacaoEquipamento, as: "solicitacao", attributes: ["protocolo"] },
+      ],
+      order: [["data_evento", "DESC"]],
+      limit: 200,
     });
 
     return res.json(historico);

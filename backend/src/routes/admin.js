@@ -18,12 +18,16 @@ import {
 import {
   alterarStatusSolicitacaoEquipamento,
   baixarEquipamento,
+  criarCategoriaEquipamento,
   criarEquipamento,
   editarEquipamento,
   entregarSolicitacaoEquipamento,
   historicoEquipamento,
+  listarCategoriasEquipamentos,
+  listarComputadores,
   listarEquipamentos,
   listarEquipamentosAlocados,
+  listarMovimentacoesEquipamentos,
   listarSolicitacoesEquipamentos,
   registrarDevolucaoEquipamento,
   removerEquipamento,
@@ -48,12 +52,17 @@ router.post("/setores", adminOnly, criarSetor);
 router.patch("/setores/:id", adminOnly, editarSetor);
 router.patch("/setores/:id/status", adminOnly, alterarStatusSetor);
 
+router.get("/categorias-equipamentos", listarCategoriasEquipamentos);
+router.post("/categorias-equipamentos", adminOnly, criarCategoriaEquipamento);
+
 router.get("/equipamentos", listarEquipamentos);
 router.post("/equipamentos", adminOnly, criarEquipamento);
 router.patch("/equipamentos/:id", adminOnly, editarEquipamento);
 router.patch("/equipamentos/:id/baixar", adminOnly, baixarEquipamento);
 router.delete("/equipamentos/:id", adminOnly, removerEquipamento);
 router.get("/equipamentos/:id/historico", historicoEquipamento);
+router.get("/computadores", listarComputadores);
+router.get("/movimentacoes-equipamentos", listarMovimentacoesEquipamentos);
 
 router.get("/solicitacoes-equipamentos", listarSolicitacoesEquipamentos);
 router.patch(

@@ -8,9 +8,20 @@ import SetoresIcon from "../../assets/icons/setor.png";
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: DashboardIcon },
   { to: "/admin/chamados", label: "Chamados", icon: ChamadosIcon },
-  { to: "/admin/equipamentos", label: "Estoque Equip.", icon: SetoresIcon },
-  { to: "/admin/solicitacoes-equipamentos", label: "Solicitações Equip.", icon: ChamadosIcon },
-  { to: "/admin/equipamentos-alocados", label: "Equip. Alocados", icon: SetoresIcon },
+  {
+    label: "Almoxarifado",
+    icon: SetoresIcon,
+    children: [
+      { to: "/admin/almoxarifado/estoque", label: "Estoque" },
+      {
+        to: "/admin/almoxarifado/solicitacoes",
+        label: "Solicitações de Equipamentos",
+      },
+      { to: "/admin/almoxarifado/alocados", label: "Equipamentos Alocados" },
+      { to: "/admin/almoxarifado/computadores", label: "Computadores" },
+      { to: "/admin/almoxarifado/movimentacoes", label: "Movimentações" },
+    ],
+  },
   { to: "/admin/setores", label: "Setores", icon: SetoresIcon },
 ];
 
@@ -40,6 +51,54 @@ export default function AdminLayout({ children }) {
 
         <nav className="admin-nav">
           {navItems.map((item) => {
+            if (item.children) {
+              const groupActive = item.children.some((child) =>
+                location.pathname.startsWith(child.to),
+              );
+
+              return (
+                <div
+                  key={item.label}
+                  className={
+                    groupActive
+                      ? "admin-nav-group admin-nav-group-active"
+                      : "admin-nav-group"
+                  }
+                >
+                  <div className="admin-nav-group-label">
+                    <img
+                      src={item.icon}
+                      alt={item.label}
+                      className="admin-nav-icon"
+                    />
+                    <span>{item.label}</span>
+                  </div>
+
+                  <div className="admin-nav-submenu">
+                    {item.children.map((child) => {
+                      const childActive =
+                        location.pathname === child.to ||
+                        location.pathname.startsWith(`${child.to}/`);
+
+                      return (
+                        <Link
+                          key={child.to}
+                          to={child.to}
+                          className={
+                            childActive
+                              ? "admin-nav-link admin-nav-sub-link active"
+                              : "admin-nav-link admin-nav-sub-link"
+                          }
+                        >
+                          <span>{child.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            }
+
             const active =
               location.pathname === item.to ||
               (item.to !== "/admin" && location.pathname.startsWith(item.to));

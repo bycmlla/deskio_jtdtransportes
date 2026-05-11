@@ -7,6 +7,15 @@ import "./EquipamentosAlocados.css";
 
 const STATUS_DEVOLUCAO = ["Disponível", "Em manutenção", "Danificado"];
 
+function getCodigo(equipamento) {
+  return (
+    equipamento?.codigo_identificador ||
+    equipamento?.numero_serie ||
+    equipamento?.patrimonio ||
+    "-"
+  );
+}
+
 export default function EquipamentosAlocados() {
   const [alocados, setAlocados] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,7 +136,7 @@ export default function EquipamentosAlocados() {
                   <th>CPF</th>
                   <th>Setor</th>
                   <th>Equipamento</th>
-                  <th>Série</th>
+                  <th>Código identificador</th>
                   <th>Entrega</th>
                   <th>Status</th>
                   <th>Observações</th>
@@ -156,7 +165,7 @@ export default function EquipamentosAlocados() {
                         </div>
                       </td>
                       <td className="equipamentos-alocados-muted">
-                        {alocacao.equipamento?.numero_serie || "-"}
+                        {getCodigo(alocacao.equipamento)}
                       </td>
                       <td className="equipamentos-alocados-muted">
                         {fmt(alocacao.data_entrega)}

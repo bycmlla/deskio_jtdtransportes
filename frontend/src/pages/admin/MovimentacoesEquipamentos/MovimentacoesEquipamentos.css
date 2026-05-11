@@ -1,0 +1,21 @@
+.movimentacoes-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.movimentacoes-primary {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.movimentacoes-code {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.movimentacoes-muted {
+  color: var(--text-muted);
+  font-size: 12px;
+}
