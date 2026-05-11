@@ -1,0 +1,142 @@
+.estoque-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.estoque-main {
+  min-width: 0;
+}
+
+.estoque-filtros-card {
+  margin-bottom: 20px;
+  padding: 16px;
+}
+
+.estoque-filtros-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 220px;
+  gap: 12px;
+}
+
+.estoque-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.estoque-equipamento-nome {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.estoque-muted {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.estoque-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.estoque-danger {
+  color: var(--danger);
+}
+
+.estoque-form-card {
+  position: sticky;
+  top: 24px;
+}
+
+.estoque-form-title {
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.estoque-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 12px;
+}
+
+.estoque-submit,
+.estoque-cancel-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.estoque-cancel-button {
+  margin-top: 8px;
+}
+
+.estoque-historico-card {
+  margin-top: 20px;
+}
+
+.estoque-historico-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.estoque-historico-header h3 {
+  font-size: 16px;
+}
+
+.estoque-historico-header p {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.estoque-historico-list {
+  display: grid;
+  gap: 10px;
+}
+
+.estoque-historico-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.estoque-historico-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.estoque-historico-item strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.estoque-historico-item span,
+.estoque-historico-item small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+  .estoque-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .estoque-form-card {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .estoque-filtros-grid,
+  .estoque-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

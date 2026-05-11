@@ -213,7 +213,7 @@ export default function DetalhesChamado() {
             ← Ver meus chamados
           </Link>
 
-          <Link to="/" className="btn btn-primary">
+          <Link to="/abrir-chamado" className="btn btn-primary">
             Abrir Novo Chamado
           </Link>
         </div>

@@ -8,6 +8,9 @@ import SetoresIcon from "../../assets/icons/setor.png";
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: DashboardIcon },
   { to: "/admin/chamados", label: "Chamados", icon: ChamadosIcon },
+  { to: "/admin/equipamentos", label: "Estoque Equip.", icon: SetoresIcon },
+  { to: "/admin/solicitacoes-equipamentos", label: "Solicitações Equip.", icon: ChamadosIcon },
+  { to: "/admin/equipamentos-alocados", label: "Equip. Alocados", icon: SetoresIcon },
   { to: "/admin/setores", label: "Setores", icon: SetoresIcon },
 ];
 
@@ -29,7 +32,7 @@ export default function AdminLayout({ children }) {
             <div className="admin-brand-logo">D</div>
 
             <div>
-              <div className="admin-brand-title">Deskio</div>
+              <div className="admin-brand-title">Deskio - JTD Transportes</div>
               <div className="admin-brand-subtitle">Painel Admin</div>
             </div>
           </div>

@@ -1,16 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
+import Inicio from './pages/public/Inicio/Inicio';
 import AbrirChamado from './pages/public/AbrirChamado/AbrirChamado';
 import Confirmacao from './pages/public/Confirmacao/Confirmacao';
+import ConfirmacaoEquipamento from './pages/public/ConfirmacaoEquipamento/ConfirmacaoEquipamento';
 import DetalhesChamado from './pages/public/DetalhesChamado/DetalhesChamado';
 import ListaChamados from './pages/public/ListaChamados/ListaChamados';
+import SolicitarEquipamento from './pages/public/SolicitarEquipamento/SolicitarEquipamento';
 
 import Login from './pages/admin/Login/Login';
 import Dashboard from './pages/admin/Dashboard/Dashboard';
 import ListaChamadosAdmin from './pages/admin/ListaChamadosAdmin/ListaChamadosAdmin';
 import DetalhesChamadoAdmin from './pages/admin/DetalhesChamadoAdmin/DetalhesChamadoAdmin';
 import Setores from './pages/admin/Setores/Setores';
+import EstoqueEquipamentos from './pages/admin/EstoqueEquipamentos/EstoqueEquipamentos';
+import SolicitacoesEquipamentos from './pages/admin/SolicitacoesEquipamentos/SolicitacoesEquipamentos';
+import EquipamentosAlocados from './pages/admin/EquipamentosAlocados/EquipamentosAlocados';
 
 function PrivateRoute({ children }) {
   const { usuario } = useAuth();
@@ -27,15 +33,21 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
-          <Route path="/" element={<AbrirChamado />} />
+          <Route path="/" element={<Inicio />} />
+          <Route path="/abrir-chamado" element={<AbrirChamado />} />
           <Route path="/chamado/confirmacao/:protocolo" element={<Confirmacao />} />
+          <Route path="/equipamento/confirmacao/:protocolo" element={<ConfirmacaoEquipamento />} />
           <Route path="/chamado/:protocolo" element={<DetalhesChamado />} />
           <Route path="/chamados" element={<ListaChamados />} />
+          <Route path="/solicitar-equipamento" element={<SolicitarEquipamento />} />
 
           <Route path="/admin/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
           <Route path="/admin" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/admin/chamados" element={<PrivateRoute><ListaChamadosAdmin /></PrivateRoute>} />
           <Route path="/admin/chamados/:id" element={<PrivateRoute><DetalhesChamadoAdmin /></PrivateRoute>} />
+          <Route path="/admin/equipamentos" element={<PrivateRoute><EstoqueEquipamentos /></PrivateRoute>} />
+          <Route path="/admin/solicitacoes-equipamentos" element={<PrivateRoute><SolicitacoesEquipamentos /></PrivateRoute>} />
+          <Route path="/admin/equipamentos-alocados" element={<PrivateRoute><EquipamentosAlocados /></PrivateRoute>} />
           <Route path="/admin/setores" element={<PrivateRoute><Setores /></PrivateRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -27,74 +27,74 @@ export default function Login() {
     }
   }
 
-return (
-  <div className="login-page">
-    <section className="login-left">
-      <div className="login-container">
-        <div className="login-header">
-          <div className="login-logo">D</div>
+  return (
+    <div className="login-page">
+      <section className="login-left">
+        <div className="login-container">
+          <div className="login-header">
+            <div className="login-logo">D</div>
 
-          <h1 className="login-title">Deskio</h1>
-          <p className="login-subtitle">Painel Administrativo</p>
-        </div>
-
-        <form className="card login-card" onSubmit={handleSubmit}>
-          {erro && <div className="alert alert-error login-error">{erro}</div>}
-
-          <div className="form-group">
-            <label>E-mail</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@deskio.com"
-              autoComplete="email"
-            />
+            <h1 className="login-title">Deskio - JTD Transportes</h1>
+            <p className="login-subtitle">Painel Administrativo</p>
           </div>
 
-          <div className="form-group login-password-field">
-            <label>Senha</label>
-            <input
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="Digite sua senha"
-              autoComplete="current-password"
-            />
-          </div>
+          <form className="card login-card" onSubmit={handleSubmit}>
+            {erro && <div className="alert alert-error login-error">{erro}</div>}
 
-          <button
-            type="submit"
-            className="btn btn-primary login-submit-button"
-            disabled={loading}
-          >
-            {loading ? "Entrando..." : "Entrar"}
-          </button>
-        </form>
+            <div className="form-group">
+              <label>E-mail</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@helpdesk.com"
+                autoComplete="email"
+              />
+            </div>
 
-        <p className="login-footer-text">
-          Acesso restrito a usuários autorizados
-        </p>
-      </div>
-    </section>
+            <div className="form-group login-password-field">
+              <label>Senha</label>
+              <input
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                placeholder="Digite sua senha"
+                autoComplete="current-password"
+              />
+            </div>
 
-    <section className="login-right">
-      <div className="blob-scene">
-        <div className="blob blob-main"></div>
-        <div className="blob blob-one"></div>
-        <div className="blob blob-two"></div>
-        <div className="blob blob-three"></div>
+            <button
+              type="submit"
+              className="btn btn-primary login-submit-button"
+              disabled={loading}
+            >
+              {loading ? "Entrando..." : "Entrar"}
+            </button>
+          </form>
 
-        <div className="blob-content">
-          <span className="blob-eyebrow">Deskio</span>
-          <h2>Gestão de chamados simples e inteligente</h2>
-          <p>
-            Organize solicitações, acompanhe status e mantenha sua equipe de TI
-            mais produtiva.
+          <p className="login-footer-text">
+            Acesso restrito a usuários autorizados
           </p>
         </div>
-      </div>
-    </section>
-  </div>
-);
+      </section>
+
+      <section className="login-right">
+        <div className="blob-scene">
+          <div className="blob blob-main"></div>
+          <div className="blob blob-one"></div>
+          <div className="blob blob-two"></div>
+          <div className="blob blob-three"></div>
+
+          <div className="blob-content">
+            <span className="blob-eyebrow">Deskio - JTD Transportes</span>
+            <h2>Gestão de chamados e equipamentos</h2>
+            <p>
+              Organize solicitações, acompanhe status e mantenha sua equipe de
+              TI mais produtiva.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }

@@ -72,7 +72,7 @@ export default function Confirmacao() {
             Acompanhar Chamado
           </Link>
 
-          <Link to="/" className="btn btn-secondary">
+          <Link to="/abrir-chamado" className="btn btn-secondary">
             Abrir Novo Chamado
           </Link>
         </div>

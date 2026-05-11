@@ -1,0 +1,74 @@
+.equipamentos-alocados-filtros-card {
+  margin-bottom: 20px;
+  padding: 16px;
+}
+
+.equipamentos-alocados-filtros-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 220px;
+  gap: 12px;
+}
+
+.equipamentos-alocados-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.equipamentos-alocados-primary {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.equipamentos-alocados-muted {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.equipamentos-alocados-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+}
+
+.equipamentos-alocados-item strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.equipamentos-alocados-item span,
+.equipamentos-alocados-observacoes {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.equipamentos-alocados-observacoes {
+  max-width: 220px;
+}
+
+.equipamentos-alocados-devolucao {
+  display: grid;
+  grid-template-columns: 150px minmax(180px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 460px;
+}
+
+.equipamentos-alocados-devolucao select,
+.equipamentos-alocados-devolucao input {
+  height: 34px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .equipamentos-alocados-filtros-grid,
+  .equipamentos-alocados-devolucao {
+    grid-template-columns: 1fr;
+  }
+
+  .equipamentos-alocados-devolucao {
+    min-width: 0;
+  }
+}

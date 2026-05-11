@@ -1,0 +1,65 @@
+.confirmacao-equipamento-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.confirmacao-equipamento-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--success-bg);
+  border: 2px solid var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  color: var(--success);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.confirmacao-equipamento-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.confirmacao-equipamento-description {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+.confirmacao-equipamento-card {
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.confirmacao-equipamento-info-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.confirmacao-equipamento-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.confirmacao-equipamento-protocolo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.confirmacao-equipamento-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}

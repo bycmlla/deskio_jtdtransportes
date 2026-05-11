@@ -132,7 +132,7 @@ export default function ListaChamados() {
             </p>
           </div>
 
-          <Link to="/" className="btn btn-primary">
+          <Link to="/abrir-chamado" className="btn btn-primary">
             + Novo Chamado
           </Link>
         </div>
@@ -172,7 +172,7 @@ export default function ListaChamados() {
           </p>
         </div>
 
-        <Link to="/" className="btn btn-primary">
+        <Link to="/abrir-chamado" className="btn btn-primary">
           + Novo Chamado
         </Link>
       </div>

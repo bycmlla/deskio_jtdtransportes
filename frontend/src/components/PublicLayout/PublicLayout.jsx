@@ -21,7 +21,7 @@ export default function PublicLayout({ children }) {
           <div className="public-brand-logo">D</div>
 
           <span className="public-brand-title">
-            Deskio
+            Deskio - JTD Transportes
           </span>
         </Link>
 
@@ -43,7 +43,11 @@ export default function PublicLayout({ children }) {
             Meus Chamados
           </Link>
 
-          <Link to="/" className="btn btn-primary btn-sm">
+          <Link to="/solicitar-equipamento" className="btn btn-secondary btn-sm">
+            Solicitar Equipamento
+          </Link>
+
+          <Link to="/abrir-chamado" className="btn btn-primary btn-sm">
             Novo Chamado
           </Link>
         </div>
@@ -52,7 +56,7 @@ export default function PublicLayout({ children }) {
       <main className="public-main">{children}</main>
 
       <footer className="public-footer">
-        Deskio — Sistema de Suporte
+        Deskio - JTD Transportes - Sistema de Suporte
       </footer>
     </div>
   );

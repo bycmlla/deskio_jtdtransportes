@@ -60,7 +60,7 @@ export default function Dashboard() {
 
   const statusColors = {
     Abertos: "#F97316",
-    "Em andamento": "#14B8A6",
+    "Em andamento": "#2563EB",
     Fechados: "#22C55E",
   };
 
@@ -156,7 +156,7 @@ export default function Dashboard() {
                 <XAxis dataKey="setor" />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="total" name="Chamados" fill="#0F766E" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="total" name="Chamados" fill="#2563EB" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -246,7 +246,7 @@ export default function Dashboard() {
                   type="monotone"
                   dataKey="total"
                   name="Chamados"
-                  stroke="#0F766E"
+                  stroke="#2563EB"
                   strokeWidth={3}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
